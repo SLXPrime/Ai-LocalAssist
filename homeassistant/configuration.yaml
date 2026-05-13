@@ -1,5 +1,9 @@
 default_config:
 
+homeassistant:
+  internal_url: "http://192.168.0.157:18123"
+  external_url: "http://192.168.0.157:18123"
+
 tts:
   - platform: google_translate
 
@@ -10,6 +14,7 @@ rest_command:
     headers:
       content-type: "application/json"
       x-api-key: !secret backend_api_key
+    timeout: 120
     payload: >
       {
         "query": "{{ query }}",
@@ -18,4 +23,3 @@ rest_command:
 
 automation: !include automations.yaml
 script: !include scripts.yaml
-

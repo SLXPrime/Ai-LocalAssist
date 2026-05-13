@@ -9,7 +9,7 @@
       local_only: false
   variables:
     query: "{{ trigger.json.query | default('') }}"
-    speaker: "{{ trigger.json.speaker | default('media_player.google_home_mini') }}"
+    speaker: "{{ trigger.json.speaker | default('media_player.escritorio') }}"
   condition:
     - condition: template
       value_template: "{{ query | length > 0 }}"
@@ -58,13 +58,13 @@
           sequence:
             - service: media_player.play_media
               target:
-                entity_id: media_player.google_home_mini
+                entity_id: media_player.escritorio
               data:
                 media_content_id: "{{ ai_operator_response.content.audioUrl }}"
                 media_content_type: music
       default:
         - service: tts.google_translate_say
           target:
-            entity_id: media_player.google_home_mini
+            entity_id: media_player.escritorio
           data:
             message: "{{ ai_operator_response.content.answer | default('Nao consegui obter uma resposta do operador de IA.') }}"

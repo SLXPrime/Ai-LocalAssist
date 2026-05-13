@@ -1,0 +1,229 @@
+{
+  "info": {
+    "name": "AI LocalAssist",
+    "description": "Requests para testar Backend, OmniVoice TTS nativo e Home Assistant.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "server_ip",
+      "value": "192.168.0.110"
+    },
+    {
+      "key": "backend_port",
+      "value": "13000"
+    },
+    {
+      "key": "homeassistant_port",
+      "value": "18123"
+    },
+    {
+      "key": "tts_port",
+      "value": "18001"
+    },
+    {
+      "key": "backend_api_key",
+      "value": "change-me"
+    },
+    {
+      "key": "speaker_entity_id",
+      "value": "media_player.google_home_mini"
+    }
+  ],
+  "item": [
+    {
+      "name": "Backend",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{server_ip}}:{{backend_port}}/health",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{backend_port}}",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Assistant - Pergunta Simples",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{backend_api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Diga uma frase curta de teste.\"\n}"
+            },
+            "url": {
+              "raw": "http://{{server_ip}}:{{backend_port}}/assistant",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{backend_port}}",
+              "path": ["assistant"]
+            }
+          }
+        },
+        {
+          "name": "Assistant - Status do Sistema",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{backend_api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Qual o status do sistema?\"\n}"
+            },
+            "url": {
+              "raw": "http://{{server_ip}}:{{backend_port}}/assistant",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{backend_port}}",
+              "path": ["assistant"]
+            }
+          }
+        },
+        {
+          "name": "Assistant - Listar Containers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{backend_api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Liste os containers docker.\"\n}"
+            },
+            "url": {
+              "raw": "http://{{server_ip}}:{{backend_port}}/assistant",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{backend_port}}",
+              "path": ["assistant"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "OmniVoice TTS",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{server_ip}}:{{tts_port}}/health",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{tts_port}}",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Gerar WAV - Feminina PT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Olá, eu sou o operador de IA da casa.\",\n  \"instruct\": \"female, portuguese accent, low pitch\",\n  \"speed\": 1.0,\n  \"response_format\": \"wav\"\n}"
+            },
+            "url": {
+              "raw": "http://{{server_ip}}:{{tts_port}}/v1/audio/speech",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{tts_port}}",
+              "path": ["v1", "audio", "speech"]
+            }
+          }
+        },
+        {
+          "name": "Gerar WAV - Masculina PT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Teste de voz masculina do operador de IA.\",\n  \"instruct\": \"male, portuguese accent, moderate pitch\",\n  \"speed\": 1.0,\n  \"response_format\": \"wav\"\n}"
+            },
+            "url": {
+              "raw": "http://{{server_ip}}:{{tts_port}}/v1/audio/speech",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{tts_port}}",
+              "path": ["v1", "audio", "speech"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Home Assistant",
+      "item": [
+        {
+          "name": "Webhook - Pergunta e Tocar na Google Home",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Diga uma frase curta de teste.\",\n  \"speaker\": \"{{speaker_entity_id}}\"\n}"
+            },
+            "url": {
+              "raw": "http://{{server_ip}}:{{homeassistant_port}}/api/webhook/ai_operator_query",
+              "protocol": "http",
+              "host": ["{{server_ip}}"],
+              "port": "{{homeassistant_port}}",
+              "path": ["api", "webhook", "ai_operator_query"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
