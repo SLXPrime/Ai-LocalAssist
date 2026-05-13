@@ -74,6 +74,7 @@ services:
       - "${BACKEND_HOST_PORT:-13000}:3000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ai-audio-data:/app/data/audio
     depends_on:
       postgres:
         condition: service_healthy
@@ -98,3 +99,4 @@ volumes:
   postgres-data:
   redis-data:
   open-webui-data:
+  ai-audio-data:

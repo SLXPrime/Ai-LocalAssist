@@ -9,6 +9,7 @@ export const configuration = () => ({
     port: Number(process.env.PORT ?? process.env.BACKEND_PORT ?? 3000),
     apiKey: process.env.BACKEND_API_KEY,
     nodeEnv: process.env.NODE_ENV ?? 'development',
+    publicUrl: process.env.BACKEND_PUBLIC_URL,
   },
   llm: {
     ollamaBaseUrl: process.env.OLLAMA_BASE_URL,
@@ -37,5 +38,17 @@ export const configuration = () => ({
     port: Number(process.env.MINECRAFT_RCON_PORT ?? 25575),
     password: process.env.MINECRAFT_RCON_PASSWORD,
   },
+  tts: {
+    enabled: process.env.TTS_ENABLED === 'true',
+    provider: process.env.TTS_PROVIDER ?? 'omnivoice',
+    audioStoragePath: process.env.TTS_AUDIO_STORAGE_PATH ?? '/app/data/audio',
+    publicBaseUrl: process.env.TTS_PUBLIC_BASE_URL ?? process.env.BACKEND_PUBLIC_URL,
+  },
+  omnivoice: {
+    baseUrl: process.env.OMNIVOICE_BASE_URL,
+    voice: process.env.OMNIVOICE_VOICE ?? 'pt-br-default',
+    instruct: process.env.OMNIVOICE_INSTRUCT ?? 'female, natural, warm',
+    speed: Number(process.env.OMNIVOICE_SPEED ?? 1.0),
+    format: process.env.OMNIVOICE_FORMAT ?? 'wav',
+  },
 });
-

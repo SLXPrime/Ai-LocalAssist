@@ -6,6 +6,7 @@ import { AssistantResponseDto, ToolExecutionResultDto } from './dto/assistant-re
 import { MemoryService } from '../memory/memory.service';
 import { LlmService } from '../providers/llm.service';
 import { ToolRegistryService } from '../tools/tool-registry.service';
+import { TtsService } from '../tts/tts.service';
 
 @Injectable()
 export class AssistantService {
@@ -15,6 +16,7 @@ export class AssistantService {
     private readonly llmService: LlmService,
     private readonly memoryService: MemoryService,
     private readonly toolRegistry: ToolRegistryService,
+    private readonly ttsService: TtsService,
     private readonly events: EventEmitter2,
   ) {}
 
@@ -53,13 +55,14 @@ export class AssistantService {
         : firstTurn.content;
 
     await this.memoryService.appendMessage(conversationId, 'assistant', answer);
+    const audio = await this.ttsService.synthesizeAnswer({ conversationId, text: answer });
     this.logger.log(`Conversation ${conversationId} answered with ${executedTools.length} tool calls`);
 
     return {
       conversationId,
       answer,
+      audioUrl: audio?.url,
       tools: executedTools,
     };
   }
 }
-

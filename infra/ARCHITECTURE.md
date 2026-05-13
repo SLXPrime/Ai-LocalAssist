@@ -20,7 +20,8 @@ Google Home Mini
   -> remote OLLAMA_BASE_URL/v1
   -> ToolRegistryService, when tool calls are requested
   -> MemoryService persists conversation
-  -> Home Assistant TTS speaks answer
+  -> TtsService generates audio with OmniVoice
+  -> Home Assistant plays audio URL on Google Home Mini
 ```
 
 ## Backend Modules
@@ -30,6 +31,7 @@ Google Home Mini
 - `ToolsModule`: tool registry, schemas, permissions and implementations.
 - `MemoryModule`: Redis context cache and PostgreSQL persistent storage.
 - `AutomationModule`: event bus hooks for future workflows.
+- `TtsModule`: speech synthesis provider abstraction and generated audio serving.
 
 ## Security Model
 
@@ -42,3 +44,12 @@ The first version intentionally favors explicit allowlists:
 
 Future hardening should add per-user permissions, audit tables, approval flows for destructive tools, and network segmentation for Docker socket access.
 
+## OmniVoice TTS Service
+
+OmniVoice is integrated through an HTTP provider. The backend calls:
+
+```text
+POST {OMNIVOICE_BASE_URL}/v1/audio/speech
+```
+
+The `services/tts-omnivoice` FastAPI service adapts the OmniVoice Python API to this HTTP contract. It runs natively on the host with its own `.env`, outside Docker, so GPU/CUDA setup stays under host control. Production deployments should prefer running this service on a GPU-capable host and pointing the backend to it with `OMNIVOICE_BASE_URL`.

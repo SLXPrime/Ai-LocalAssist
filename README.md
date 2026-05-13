@@ -26,6 +26,7 @@ Componentes:
 - `apps/backend/src/tools`: tool registry, permissao por tool e implementacoes iniciais.
 - `apps/backend/src/memory`: Redis para contexto recente e PostgreSQL para historico persistente.
 - `open-webui`: UI conectada ao mesmo Ollama remoto.
+- `services/tts-omnivoice`: servico HTTP nativo para OmniVoice TTS, com `.env` proprio e fora do Docker.
 
 ## Estrutura
 
@@ -34,6 +35,7 @@ Componentes:
 /apps/backend
 /apps/tools
 /apps/automation
+/services/tts-omnivoice
 /homeassistant
 /docker
 /docker-compose.yml
@@ -89,6 +91,51 @@ REDIS_HOST_PORT=16379
 
 As portas internas dos containers continuam padrao (`3000`, `8123`, `8080`, `5432`, `6379`) para os servicos conversarem entre si na rede Docker.
 
+## TTS com OmniVoice
+
+O backend pode gerar audio com OmniVoice e devolver `audioUrl` na resposta do `/assistant`. O Home Assistant entao toca essa URL na Google Home Mini com `media_player.play_media`.
+
+O OmniVoice roda nativamente como servico separado em `services/tts-omnivoice`, com `.env` proprio. Ele nao roda via Docker.
+
+No `.env` do projeto principal, configure apenas o cliente TTS do backend:
+
+```env
+TTS_ENABLED=true
+TTS_PROVIDER=omnivoice
+TTS_PUBLIC_BASE_URL=http://IP-DO-SERVIDOR:13000
+OMNIVOICE_BASE_URL=http://IP-DO-SERVIDOR-TTS:18001
+OMNIVOICE_INSTRUCT=female, natural, warm, low pitch
+OMNIVOICE_SPEED=1.0
+```
+
+Para rodar o servico OmniVoice nativo:
+
+```sh
+cd services/tts-omnivoice
+cp .env.example .env
+sh scripts/setup.sh
+sh scripts/run.sh
+```
+
+No Windows:
+
+```powershell
+cd services\tts-omnivoice
+Copy-Item .env.example .env
+.\scripts\setup.ps1
+.\scripts\run.ps1
+```
+
+O servico usa `OMNIVOICE_DEVICE=cpu` por padrao para ser portavel, mas TTS neural pesado tende a ficar lento em CPU. Em producao, se o servidor estiver cheio ou se voce tiver uma maquina com GPU, rode `services/tts-omnivoice` nativamente nessa maquina e aponte:
+
+```env
+OMNIVOICE_BASE_URL=http://IP-DO-SERVIDOR-TTS:18001
+```
+
+Importante para Google Home/Cast: `TTS_PUBLIC_BASE_URL` precisa ser uma URL acessivel pela Google Home Mini na rede. Evite nomes internos Docker como `http://backend:3000`; use IP/host real do servidor.
+
+Importante para o backend: como ele roda em Docker e o TTS roda nativamente, `OMNIVOICE_BASE_URL=http://localhost:18001` nao funciona de dentro do container. Use o IP real do host ou um DNS acessivel pelo container.
+
 ## Endpoint principal
 
 ```http
@@ -111,6 +158,7 @@ Resposta:
 {
   "conversationId": "uuid",
   "answer": "Resultado explicado em linguagem natural",
+  "audioUrl": "http://IP-DO-SERVIDOR:13000/audio/arquivo.wav",
   "tools": []
 }
 ```

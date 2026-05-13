@@ -4,6 +4,7 @@ export const validationSchema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
   PORT: Joi.number().optional(),
   BACKEND_PORT: Joi.number().optional(),
+  BACKEND_PUBLIC_URL: Joi.string().uri().optional(),
   BACKEND_API_KEY: Joi.string().min(12).optional(),
   OLLAMA_BASE_URL: Joi.string().uri().required(),
   OLLAMA_MODEL: Joi.string().default('llama3.1:8b'),
@@ -22,5 +23,13 @@ export const validationSchema = Joi.object({
   MINECRAFT_RCON_HOST: Joi.string().default('minecraft'),
   MINECRAFT_RCON_PORT: Joi.number().default(25575),
   MINECRAFT_RCON_PASSWORD: Joi.string().optional(),
+  TTS_ENABLED: Joi.boolean().truthy('true').falsy('false').default(false),
+  TTS_PROVIDER: Joi.string().valid('omnivoice').default('omnivoice'),
+  TTS_AUDIO_STORAGE_PATH: Joi.string().default('/app/data/audio'),
+  TTS_PUBLIC_BASE_URL: Joi.string().uri().optional(),
+  OMNIVOICE_BASE_URL: Joi.string().uri().optional(),
+  OMNIVOICE_VOICE: Joi.string().default('pt-br-default'),
+  OMNIVOICE_INSTRUCT: Joi.string().allow('').default('female, natural, warm'),
+  OMNIVOICE_SPEED: Joi.number().default(1.0),
+  OMNIVOICE_FORMAT: Joi.string().valid('wav', 'mp3').default('wav'),
 }).unknown(true);
-

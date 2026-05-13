@@ -9,6 +9,7 @@ import { MemoryModule } from './memory/memory.module';
 import { ProvidersModule } from './providers/providers.module';
 import { ToolsModule } from './tools/tools.module';
 import { HealthController } from './health.controller';
+import { TtsModule } from './tts/tts.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { HealthController } from './health.controller';
     MemoryModule,
     ProvidersModule,
     ToolsModule,
+    TtsModule,
     AutomationModule,
     AssistantModule,
   ],

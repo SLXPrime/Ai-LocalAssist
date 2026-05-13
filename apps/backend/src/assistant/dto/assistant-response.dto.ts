@@ -7,6 +7,6 @@ export interface ToolExecutionResultDto {
 export interface AssistantResponseDto {
   conversationId: string;
   answer: string;
+  audioUrl?: string;
   tools: ToolExecutionResultDto[];
 }
-
