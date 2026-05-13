@@ -1,0 +1,46 @@
+- id: ai_operator_webhook_query
+  alias: AI Operator - Webhook query
+  mode: queued
+  trigger:
+    - platform: webhook
+      webhook_id: ai_operator_query
+      allowed_methods:
+        - POST
+      local_only: false
+  variables:
+    query: "{{ trigger.json.query | default('') }}"
+    speaker: "{{ trigger.json.speaker | default('media_player.google_home_mini') }}"
+  condition:
+    - condition: template
+      value_template: "{{ query | length > 0 }}"
+  action:
+    - service: rest_command.ai_operator_assistant
+      data:
+        query: "{{ query }}"
+        conversation_id: "homeassistant"
+      response_variable: ai_operator_response
+    - service: tts.google_translate_say
+      target:
+        entity_id: "{{ speaker }}"
+      data:
+        message: "{{ ai_operator_response.content.answer | default('Nao consegui obter uma resposta do operador de IA.') }}"
+
+- id: ai_operator_voice_intent_example
+  alias: AI Operator - Voice intent example
+  mode: single
+  trigger:
+    - platform: conversation
+      command:
+        - "operador {query}"
+        - "assistente {query}"
+  action:
+    - service: rest_command.ai_operator_assistant
+      data:
+        query: "{{ trigger.slots.query }}"
+        conversation_id: "google-home-mini"
+      response_variable: ai_operator_response
+    - service: tts.google_translate_say
+      target:
+        entity_id: media_player.google_home_mini
+      data:
+        message: "{{ ai_operator_response.content.answer | default('Nao consegui obter uma resposta do operador de IA.') }}"

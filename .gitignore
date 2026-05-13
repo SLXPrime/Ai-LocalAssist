@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+coverage/
+tmp/
+data/
+homeassistant/.storage/
+homeassistant/deps/
+homeassistant/tts/
+homeassistant/home-assistant_v2.db*
+postgres-data/
+redis-data/
+

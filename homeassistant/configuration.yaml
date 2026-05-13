@@ -1,0 +1,21 @@
+default_config:
+
+tts:
+  - platform: google_translate
+
+rest_command:
+  ai_operator_assistant:
+    url: "http://backend:3000/assistant"
+    method: post
+    headers:
+      content-type: "application/json"
+      x-api-key: !secret backend_api_key
+    payload: >
+      {
+        "query": "{{ query }}",
+        "conversationId": "{{ conversation_id | default('homeassistant') }}"
+      }
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+

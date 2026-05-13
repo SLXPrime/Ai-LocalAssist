@@ -1,0 +1,20 @@
+ai_operator_say:
+  alias: AI Operator - Say on Google Home
+  mode: queued
+  fields:
+    message:
+      required: true
+      selector:
+        text:
+    speaker:
+      required: false
+      selector:
+        entity:
+          domain: media_player
+  sequence:
+    - service: tts.google_translate_say
+      target:
+        entity_id: "{{ speaker | default('media_player.google_home_mini') }}"
+      data:
+        message: "{{ message }}"
+
