@@ -69,3 +69,5 @@ OMNIVOICE_DEVICE=cuda:0
 ```
 
 Como este servico roda nativamente, a configuracao de CUDA/PyTorch fica sob controle do host.
+
+No Windows, se o pip nao encontrar uma versao exata de PyTorch, mantenha `torch>=2.9.0,<2.12.0` e `torchaudio>=2.9.0,<2.12.0` no `requirements.txt`. Para CUDA, instale a variante recomendada pela pagina oficial do PyTorch antes de rodar `scripts/run.ps1`.

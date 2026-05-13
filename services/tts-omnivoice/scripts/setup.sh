@@ -13,7 +13,6 @@ if [ ! -d .venv ]; then
 fi
 
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements.txt
 
 echo "OmniVoice native service setup complete."
-

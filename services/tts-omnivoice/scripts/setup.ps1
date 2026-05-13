@@ -9,10 +9,13 @@ if (!(Test-Path ".env")) {
 
 if (!(Test-Path ".venv")) {
   python -m venv .venv
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\pip.exe install -r requirements.txt
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host "OmniVoice native service setup complete."
-
